@@ -1,12 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OpenCart.Common
+﻿namespace OpenCart.Common
 {
-    internal class ServiceResult
+    public class ServiceResult<T>
     {
+        public ServiceResult()
+        {
+            Errors = new List<string>();
+        }
+        public ServiceResult(T response)
+        {
+            Response = response;
+        }
+        public ServiceResult(string error) 
+        {
+            Errors = new List<string>() { error};
+        }
+        public T Response { get; set; }
+
+        public dynamic Tag { get; set; }
+
+        public bool HasErrors => Errors.Any();
+
+        public List<string> Errors { get; set; }
     }
 }
