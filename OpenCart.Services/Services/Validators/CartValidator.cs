@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentValidation;
+using OpenCart.Models.Entities;
 
 namespace OpenCart.Services.Services.Validators
 {
-    internal class CartValidator
+    public class CartValidator : AbstractValidator<CartItem>
     {
+        public CartValidator()
+        {
+            RuleFor(item => item.Description).MaximumLength(500);
+            RuleFor(item => item.Price).GreaterThan(0);
+            RuleFor(item => item.Name).NotEmpty().MaximumLength(155);
+            RuleFor(item => item.Quantity).GreaterThan(0);
+        }
     }
 }
