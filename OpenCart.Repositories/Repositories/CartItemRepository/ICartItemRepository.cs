@@ -5,6 +5,6 @@ namespace OpenCart.Repositories.Repositories.CartItemRepository
 {
     public interface ICartItemRepository : IGenericRepository<CartItem>
     {
-        // Additional methods specific to the BuyerRepository, if any.
+        // Additional methods specific to the CartRepository, if any.
     }
 }

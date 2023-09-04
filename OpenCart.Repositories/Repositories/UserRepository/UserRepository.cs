@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OpenCart.Infrastructure.Context;
+using OpenCart.Models.Entities;
 
 namespace OpenCart.Repositories.Repositories.UserRepository
 {
-    internal class UserRepository
+    public class UserRepository : GenericRepository<ApplicationUser>, IUserRepository
     {
+        public UserRepository(OpenCartDbContext dbContext) : base(dbContext)
+        {
+        }
     }
 }

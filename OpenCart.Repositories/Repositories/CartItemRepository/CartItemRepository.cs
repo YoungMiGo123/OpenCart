@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OpenCart.Infrastructure.Context;
+using OpenCart.Models.Entities;
 
 namespace OpenCart.Repositories.Repositories.CartItemRepository
 {
-    internal class CartItemRepository
+    public class CartItemRepository : GenericRepository<CartItem>, ICartItemRepository
     {
+        public CartItemRepository(OpenCartDbContext dbContext) : base(dbContext)
+        {
+        }
     }
 }

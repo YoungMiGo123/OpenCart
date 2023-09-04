@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OpenCart.Common\OpenCart.Common.csproj" />
+    <ProjectReference Include="..\OpenCart.Infrastructure\OpenCart.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

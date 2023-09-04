@@ -1,18 +1,16 @@
-﻿using OpenCart.Common;
+﻿using Microsoft.EntityFrameworkCore;
+using OpenCart.Common;
 using OpenCart.Infrastructure.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OpenCart.Repositories.Repositories.GenericRepository;
+using System.Linq.Expressions;
 
-namespace OpenCart.Repositories.Repositories.GenericRepository
+namespace OpenCart.Repositories.Repositories
 {
-    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : Entity
+    public class GenericRepository<TEntity> : IDisposable, IGenericRepository<TEntity> where TEntity : Entity
     {
         private readonly OpenCartDbContext _dbContext;
 
-        public GenericRepository(FarmersMarketDbContext dbContext)
+        public GenericRepository(OpenCartDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -77,10 +75,17 @@ namespace OpenCart.Repositories.Repositories.GenericRepository
             await _dbContext.SaveChangesAsync();
             return true;
         }
-        public async Task<PaginationResponse<TEntity>> GetAllPagedAsync(int page, int pageSize)
+        public async Task<PaginationResponse<TEntity>> GetAllPagedAsync(Expression<Func<TEntity, bool>> filter = null, int page = 1, int pageSize = 25)
         {
-            var totalCount = await _dbContext.Set<TEntity>().CountAsync();
-            var data = await _dbContext.Set<TEntity>()
+            IQueryable<TEntity> query = _dbContext.Set<TEntity>();
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            var totalCount = await query.CountAsync();
+
+            var data = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -102,6 +107,22 @@ namespace OpenCart.Repositories.Repositories.GenericRepository
                 response.Add(await GetByIdAsync(id));
             }
             return response;
+        }
+        public async Task<bool> AnyAsync(Guid id) 
+        {
+            return await GetByIdAsync(id) != null;
+        }
+
+        public void Dispose()
+        {
+            _dbContext.Dispose();
+        }
+
+        public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> filter = null)
+        {
+            IQueryable<TEntity> query = _dbContext.Set<TEntity>();
+            var result = filter != null ? await query.FirstOrDefaultAsync(filter) : await query.FirstOrDefaultAsync();
+            return result;
         }
     }
 
