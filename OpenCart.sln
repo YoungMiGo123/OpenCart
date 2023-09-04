@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCart.Api", "OpenCart\OpenCart.Api.csproj", "{83192F14-9B19-4BE4-8FA9-499C438D7655}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FB6933E6-8E7A-40B0-87D4-94747FCD1EFB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenCart.Api", "OpenCart.Api", "{0AAFC970-C59B-49ED-85DB-5D6A3FD92F56}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenCart.Models", "OpenCart.Models", "{CAD3A09A-1FB4-4849-BE9A-D458ADFA3A69}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenCart.Core", "OpenCart.Core", "{5FA15ACF-9F4F-4405-BEC7-7EF87675FACA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCart.Models", "OpenCart.Models\OpenCart.Models.csproj", "{03C78928-4B5B-4D90-B3AD-B8A0067AE5F4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenCart.Tests", "OpenCart.Tests", "{9FBD8A24-7A4A-4ACB-98C7-5D8FA30B58CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCart.Tests", "OpenCart.Tests\OpenCart.Tests.csproj", "{C634FDDB-BDD9-49A4-A3FD-FC8898B33490}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenCart.Infrastructure", "OpenCart.Infrastructure", "{1BF544AA-9839-4BF7-B816-D0307D383C00}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83192F14-9B19-4BE4-8FA9-499C438D7655}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83192F14-9B19-4BE4-8FA9-499C438D7655}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83192F14-9B19-4BE4-8FA9-499C438D7655}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83192F14-9B19-4BE4-8FA9-499C438D7655}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03C78928-4B5B-4D90-B3AD-B8A0067AE5F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03C78928-4B5B-4D90-B3AD-B8A0067AE5F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03C78928-4B5B-4D90-B3AD-B8A0067AE5F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03C78928-4B5B-4D90-B3AD-B8A0067AE5F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C634FDDB-BDD9-49A4-A3FD-FC8898B33490}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C634FDDB-BDD9-49A4-A3FD-FC8898B33490}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C634FDDB-BDD9-49A4-A3FD-FC8898B33490}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C634FDDB-BDD9-49A4-A3FD-FC8898B33490}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{83192F14-9B19-4BE4-8FA9-499C438D7655} = {0AAFC970-C59B-49ED-85DB-5D6A3FD92F56}
+		{0AAFC970-C59B-49ED-85DB-5D6A3FD92F56} = {FB6933E6-8E7A-40B0-87D4-94747FCD1EFB}
+		{CAD3A09A-1FB4-4849-BE9A-D458ADFA3A69} = {FB6933E6-8E7A-40B0-87D4-94747FCD1EFB}
+		{5FA15ACF-9F4F-4405-BEC7-7EF87675FACA} = {FB6933E6-8E7A-40B0-87D4-94747FCD1EFB}
+		{03C78928-4B5B-4D90-B3AD-B8A0067AE5F4} = {CAD3A09A-1FB4-4849-BE9A-D458ADFA3A69}
+		{9FBD8A24-7A4A-4ACB-98C7-5D8FA30B58CD} = {FB6933E6-8E7A-40B0-87D4-94747FCD1EFB}
+		{C634FDDB-BDD9-49A4-A3FD-FC8898B33490} = {9FBD8A24-7A4A-4ACB-98C7-5D8FA30B58CD}
+		{1BF544AA-9839-4BF7-B816-D0307D383C00} = {FB6933E6-8E7A-40B0-87D4-94747FCD1EFB}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {519E09C3-EF3B-4C8A-8EEB-3DBF84DE62BB}
+	EndGlobalSection
+EndGlobal
