@@ -1,10 +1,12 @@
-﻿using OpenCart.Models.Entities;
+﻿using OpenCart.Common;
+using OpenCart.Models.Entities;
 
 namespace OpenCart.Services.Services.UserService
 {
     public interface IUserService
     {
-        Task<ServiceResponse<ApplicationUser>> CreateAsync(Domain.User user);
-        Task<bool> ExistAsync(string identityName);
+        Task<ServiceResult<ApplicationUser>> CreateUserAsync(ApplicationUser user);
+
+        Task<bool> UserExistAsync(string userName);
     }
 }
