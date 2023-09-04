@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCart.Tests", "OpenCart.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenCart.Infrastructure", "OpenCart.Infrastructure", "{1BF544AA-9839-4BF7-B816-D0307D383C00}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCart.Common", "OpenCart.Common\OpenCart.Common.csproj", "{0860629F-5F41-4480-9ACF-AE6F6E3646FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCart.Infrastructure", "OpenCart.Infrastructure\OpenCart.Infrastructure.csproj", "{8DC6CF71-8E1B-4505-8BA3-9510C172B945}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{C634FDDB-BDD9-49A4-A3FD-FC8898B33490}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C634FDDB-BDD9-49A4-A3FD-FC8898B33490}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C634FDDB-BDD9-49A4-A3FD-FC8898B33490}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0860629F-5F41-4480-9ACF-AE6F6E3646FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0860629F-5F41-4480-9ACF-AE6F6E3646FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0860629F-5F41-4480-9ACF-AE6F6E3646FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0860629F-5F41-4480-9ACF-AE6F6E3646FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DC6CF71-8E1B-4505-8BA3-9510C172B945}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DC6CF71-8E1B-4505-8BA3-9510C172B945}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DC6CF71-8E1B-4505-8BA3-9510C172B945}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DC6CF71-8E1B-4505-8BA3-9510C172B945}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +64,8 @@ Global
 		{9FBD8A24-7A4A-4ACB-98C7-5D8FA30B58CD} = {FB6933E6-8E7A-40B0-87D4-94747FCD1EFB}
 		{C634FDDB-BDD9-49A4-A3FD-FC8898B33490} = {9FBD8A24-7A4A-4ACB-98C7-5D8FA30B58CD}
 		{1BF544AA-9839-4BF7-B816-D0307D383C00} = {FB6933E6-8E7A-40B0-87D4-94747FCD1EFB}
+		{0860629F-5F41-4480-9ACF-AE6F6E3646FD} = {CAD3A09A-1FB4-4849-BE9A-D458ADFA3A69}
+		{8DC6CF71-8E1B-4505-8BA3-9510C172B945} = {1BF544AA-9839-4BF7-B816-D0307D383C00}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {519E09C3-EF3B-4C8A-8EEB-3DBF84DE62BB}
