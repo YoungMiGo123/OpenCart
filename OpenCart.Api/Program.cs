@@ -18,10 +18,12 @@ var configuration = new ConfigurationBuilder()
 
 var openCartServiceSetings = configuration.GetSection("OpenCartSettings")
     .Get<OpenCartServiceSettings>();
+
 builder.Services.AddSingleton<IOpenCartServiceSettings>(x => openCartServiceSetings);
 builder.Services.ConfigureAuthentication(openCartServiceSetings);
 builder.Services.ConfigureDatabase(openCartServiceSetings);
 builder.Services.ConfigureServices(openCartServiceSetings);
+builder.ConfigureLogging(openCartServiceSetings);
 
 var app = builder.Build();
 

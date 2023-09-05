@@ -21,9 +21,14 @@ namespace OpenCart.Api.Controllers
         {
             try
             {
+                var fallbackUrl = "https://localhost:7142/swagger";
+                var redirectUrl = string.IsNullOrWhiteSpace(_openCartSettings.SecureOAuthSettings.RedirectUrl) ?
+                     fallbackUrl : 
+                    _openCartSettings.SecureOAuthSettings.RedirectUrl;
+
                 var authenticationProperties = new AuthenticationProperties
                 {
-                    RedirectUri = _openCartSettings.SecureOAuthSettings.RedirectUrl
+                    RedirectUri = redirectUrl
                 };
 
                 var authenticationSchemes = new[] { "GitHub" };
