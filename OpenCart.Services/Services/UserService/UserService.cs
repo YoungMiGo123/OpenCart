@@ -52,9 +52,9 @@ namespace OpenCart.Services.Services.UserService
 
         }
 
-        public Task<bool> UserExistAsync(string userName)
+        public async Task<bool> UserExistAsync(string userName)
         {
-            return Task.FromResult(_userRepository.Get(filter: x => x.Username == userName).Any());
+            return await _userRepository.FirstOrDefaultAsync(x => x.Username == userName) != null;
         }
     }
 }
