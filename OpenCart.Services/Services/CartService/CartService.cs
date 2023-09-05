@@ -1,12 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
+using FluentValidation;
+using Microsoft.Extensions.Logging;
 using OpenCart.Common;
+using OpenCart.Models.DTOs;
 using OpenCart.Models.Entities;
 using OpenCart.Operations.Commands;
 using OpenCart.Operations.Queries;
 using OpenCart.Repositories.Repositories.CartItemImageRepository;
 using OpenCart.Repositories.Repositories.CartItemRepository;
 using OpenCart.Repositories.Repositories.UserRepository;
-using OpenCart.Services.Services.Validators;
 
 namespace OpenCart.Services.Services.CartService
 {
@@ -14,23 +16,24 @@ namespace OpenCart.Services.Services.CartService
     {
         private readonly ILogger<CartService> _logger;
         private readonly ICartItemRepository _cartItemRepository;
+        private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
         private readonly ICartItemImageRepository _imageRepository;
-        private readonly CartImageValidator _cartImageValidator;
+        private readonly IValidator<CartItemImageDto> _cartImageValidator;
 
-        public CartService(ILogger<CartService> logger, ICartItemRepository cartItemRepository, IUserRepository userRepository, ICartItemImageRepository imageRepository, CartImageValidator cartImageValidator)
+        public CartService(ILogger<CartService> logger, ICartItemRepository cartItemRepository, IMapper mapper, IUserRepository userRepository, ICartItemImageRepository imageRepository, IValidator<CartItemImageDto> cartImageValidator)
         {
             _logger = logger;
             _cartItemRepository = cartItemRepository;
+            _mapper = mapper;
             _userRepository = userRepository;
             _imageRepository = imageRepository;
             _cartImageValidator = cartImageValidator;
         }
-        public async Task<ServiceResult<CartItem>> AddCartItemAsync(AddCartItemCommand command)
+        public async Task<ServiceResult<CartItemDto>> AddCartItemAsync(AddCartItemCommand command)
         {
             try
             {
-                
                 if (string.IsNullOrWhiteSpace(command.UserId))
                 {
                     throw new ArgumentNullException(nameof(command.UserId));
@@ -44,30 +47,36 @@ namespace OpenCart.Services.Services.CartService
                 {
                     return NoUserFoundResponse(command.UserId);
                 }
-                command.CartItem.UserId = user.Id;
-                var result = await _cartItemRepository.AddAsync(command.CartItem);
+                var cartItem = _mapper.Map<CartItem>(command.CartItem);
+
+                cartItem.UserId = user.Id;
+                cartItem.CreatedDateTime = DateTime.UtcNow;
+                cartItem.ModifiedDateTime = DateTime.UtcNow;
+
+                var result = await _cartItemRepository.AddAsync(cartItem);
 
                 if (result == null)
                 {
                     _logger.LogError($"Failed to add item for user {command.UserId}");
-                    return new ServiceResult<CartItem>
+                    return new ServiceResult<CartItemDto>
                     {
-                        Response = new CartItem(),
+                        Response = new CartItemDto(),
                         Errors = new List<string> { $"Failed to add cart item for user {command.UserId}" }
                     };
                 }
-             
+
+                var resultDto = _mapper.Map<CartItemDto>(result);
                 _logger.LogInformation($"Item added successfully for user {command.UserId}, cart item ID {command?.CartItem?.Id}");
-                return new ServiceResult<CartItem>
+                return new ServiceResult<CartItemDto>
                 {
-                    Response = result
+                    Response = resultDto
                 };
-            }  
-            catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, $"An error occured at AddCartItemAsync when we tried to add a new cart item: UserID = {command.UserId} Cart Item {command.CartItem}");
-                
-                return new ServiceResult<CartItem>()
+
+                return new ServiceResult<CartItemDto>()
                 {
                     Errors = new List<string>()
                     {
@@ -75,10 +84,10 @@ namespace OpenCart.Services.Services.CartService
                     }
                 };
             }
-          
+
         }
 
-        public async Task<ServiceResult<CartItem>> AddImageAsync(AddCartItemImageCommand command)
+        public async Task<ServiceResult<CartItemDto>> AddImageAsync(AddCartItemImageCommand command)
         {
             try
             {
@@ -92,8 +101,8 @@ namespace OpenCart.Services.Services.CartService
                 {
                     var validationErrors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
                     _logger.LogWarning($"Validation errors encountered while adding image for user {command.UserId}, cart item ID {command.CartItemId}: {string.Join(", ", validationErrors)}");
-                    
-                    return new ServiceResult<CartItem>
+
+                    return new ServiceResult<CartItemDto>
                     {
                         Errors = validationErrors
                     };
@@ -111,10 +120,13 @@ namespace OpenCart.Services.Services.CartService
                 if (cartItem == null)
                 {
                     _logger.LogWarning($"Cart item with ID {command.CartItemId} not found for user {command.UserId}");
-                    return new ServiceResult<CartItem>("Cart item not found");
+                    return new ServiceResult<CartItemDto>("Cart item not found");
                 }
 
-                var cartItemImage = command.CartItemImage;
+                var cartItemImage = _mapper.Map<CartItemImage>(command.CartItemImage);
+                cartItem.CreatedDateTime = DateTime.UtcNow;
+                cartItem.ModifiedDateTime = DateTime.UtcNow;
+
                 cartItem.CartItemImages.Add(cartItemImage);
 
                 var result = await _imageRepository.UpdateAsync(cartItemImage);
@@ -122,17 +134,17 @@ namespace OpenCart.Services.Services.CartService
                 if (result == null)
                 {
                     _logger.LogError($"Failed to add image for user {command.UserId}, cart item ID {command.CartItemId}");
-                    return new ServiceResult<CartItem>("Failed to add image");
+                    return new ServiceResult<CartItemDto>("Failed to add image") { Response = new CartItemDto() };
                 }
-                
+                var resultDto = _mapper.Map<CartItemDto>(result);
                 _logger.LogError($"Failed to add image for user {user.Id}, cart item ID {command.CartItemId}");
-                return new ServiceResult<CartItem>(cartItem);
+                return new ServiceResult<CartItemDto>(resultDto);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"An error occured at AddImageAsync when we tried to add a new cart item image: UserID = {command.UserId} Cart Item Image {command.CartItemId}");
 
-                return new ServiceResult<CartItem>()
+                return new ServiceResult<CartItemDto>()
                 {
                     Errors = new List<string>()
                     {
@@ -140,10 +152,10 @@ namespace OpenCart.Services.Services.CartService
                     }
                 };
             }
-     
+
         }
 
-        public async Task<ServiceResult<CartItem>> GetCartItemAsync(CartItemQuery query)
+        public async Task<ServiceResult<CartItemDto>> GetCartItemAsync(CartItemQuery query)
         {
             try
             {
@@ -163,34 +175,34 @@ namespace OpenCart.Services.Services.CartService
                 if (cartItem == null)
                 {
                     _logger.LogWarning($"Cart item with ID {query.CartItemId} not found for user {user.Id}");
-                    return new ServiceResult<CartItem>()
+                    return new ServiceResult<CartItemDto>()
                     {
                         Errors = new List<string> { "Cart item not found" }
                     };
                 }
 
                 _logger.LogInformation($"Retrieved details for cart item ID {query.CartItemId} for user {user.Id}");
+                var resultDto = _mapper.Map<CartItemDto>(cartItem);
+                return new ServiceResult<CartItemDto>(resultDto);
 
-                return new ServiceResult<CartItem>(cartItem);
-                
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"An error occured at GetCartItemAsync: UserID = {query.UserId} Cart Item {query.CartItemId}");
 
-                return new ServiceResult<CartItem>()
+                return new ServiceResult<CartItemDto>()
                 {
-                    Response = new CartItem(),
+                    Response = new CartItemDto(),
                     Errors = new List<string>()
                     {
                         $"An error occured at GetCartItemAsync: UserID = {query.UserId} Cart Item {query.CartItemId}"
                     }
                 };
             }
-       
+
         }
 
-        public async Task<ServiceResult<PaginationResponse<CartItem>>> GetCartItemsAsync(string userId)
+        public async Task<ServiceResult<PaginationResponse<CartItemDto>>> GetCartItemsAsync(string userId)
         {
             try
             {
@@ -207,9 +219,9 @@ namespace OpenCart.Services.Services.CartService
                 {
                     _logger.LogWarning($"User with ID {userId} not found");
 
-                    return new ServiceResult<PaginationResponse<CartItem>>()
+                    return new ServiceResult<PaginationResponse<CartItemDto>>()
                     {
-                        Response = new PaginationResponse<CartItem>() { Data = new List<CartItem>() },
+                        Response = new PaginationResponse<CartItemDto>() { Data = new List<CartItemDto>() },
                         Errors = new List<string> { "User not found" }
                     };
                 }
@@ -218,19 +230,27 @@ namespace OpenCart.Services.Services.CartService
 
                 _logger.LogInformation($"Retrieved {cartItems.TotalCount} items for user {userId}");
 
-                return new ServiceResult<PaginationResponse<CartItem>>()
+                var cartItemDtos = _mapper.Map<List<CartItemDto>>(cartItems.Data);
+
+                return new ServiceResult<PaginationResponse<CartItemDto>>()
                 {
-                    Response = cartItems,
-                    Errors = new List<string> { "User not found" }
+                    Response = new PaginationResponse<CartItemDto>
+                    {
+                        Data = cartItemDtos,
+                        Page = cartItems.Page,
+                        PageSize = cartItems.PageSize,
+                        TotalCount = cartItems.TotalCount
+                    }
                 };
+
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"An error occured at GetCartItemsAsync when we tried to add a new cart item: UserID = {userId}");
 
-                return new ServiceResult<PaginationResponse<CartItem>> ()
+                return new ServiceResult<PaginationResponse<CartItemDto>>()
                 {
-                    Response = new PaginationResponse<CartItem>() { Data = new List<CartItem>() },
+                    Response = new PaginationResponse<CartItemDto>() { Data = new List<CartItemDto>() },
                     Errors = new List<string>()
                     {
                         $"An error occured at GetCartItemsAsync when we tried to add a new cart item: UserID = {userId}"
@@ -284,7 +304,7 @@ namespace OpenCart.Services.Services.CartService
             }
         }
 
-        public async Task<ServiceResult<CartItem>> UpdateCartItemAsync(UpdateCartItemCommand command)
+        public async Task<ServiceResult<CartItemDto>> UpdateCartItemAsync(UpdateCartItemCommand command)
         {
             try
             {
@@ -304,7 +324,7 @@ namespace OpenCart.Services.Services.CartService
                 if (cartItem == null)
                 {
                     _logger.LogWarning($"Cart item with ID {command.CartItemId} not found for user {user.Id}");
-                    return new ServiceResult<CartItem>("Cart item not found");
+                    return new ServiceResult<CartItemDto>("Cart item not found");
                 }
 
                 var cartItemInput = command.CartItem;
@@ -320,22 +340,23 @@ namespace OpenCart.Services.Services.CartService
                 {
                     var errorMessage = $"Failed to update item for user {user.Id}, cart item ID {command.CartItemId}";
                     _logger.LogError(errorMessage);
-                    return new ServiceResult<CartItem>
+                    return new ServiceResult<CartItemDto>
                     {
-                        Response = new CartItem(),
+                        Response = new CartItemDto(),
                         Errors = new List<string> { errorMessage }
                     };
 
                 }
+                var resultDto = _mapper.Map<CartItemDto>(result);
                 _logger.LogInformation($"Successfully updated cart item for user {user.Id}, cart item ID {command.CartItemId}");
-                return new ServiceResult<CartItem>(result);
+                return new ServiceResult<CartItemDto>(resultDto);
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"An error occured at UpdateCartItemAsync when we tried to update a cart: UserID = {command.UserId} Cart Item {command.CartItem}");
 
-                return new ServiceResult<CartItem>()
+                return new ServiceResult<CartItemDto>()
                 {
                     Errors = new List<string>()
                     {
@@ -362,12 +383,12 @@ namespace OpenCart.Services.Services.CartService
             }
         }
 
-        private ServiceResult<CartItem> NoUserFoundResponse(string userId)
+        private ServiceResult<CartItemDto> NoUserFoundResponse(string userId)
         {
             _logger.LogWarning($"User with ID {userId} not found");
-            return new ServiceResult<CartItem>
+            return new ServiceResult<CartItemDto>
             {
-                Response = new CartItem(),
+                Response = new CartItemDto(),
                 Errors = new List<string> { "User not found" }
             };
         }

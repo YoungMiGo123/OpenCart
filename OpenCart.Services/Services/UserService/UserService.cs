@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using FluentValidation;
+using Microsoft.Extensions.Logging;
 using OpenCart.Common;
 using OpenCart.Models.Entities;
 using OpenCart.Repositories.Repositories.UserRepository;
-using OpenCart.Services.Services.Validators;
 
 namespace OpenCart.Services.Services.UserService
 {
@@ -10,9 +10,9 @@ namespace OpenCart.Services.Services.UserService
     {
         private readonly IUserRepository _userRepository;
         private readonly ILogger<UserService> _logger;
-        private readonly UserValidator _validations;
+        private readonly IValidator<ApplicationUser> _validations;
 
-        public UserService(IUserRepository userRepository, ILogger<UserService> logger, UserValidator validations)
+        public UserService(IUserRepository userRepository, ILogger<UserService> logger, IValidator<ApplicationUser> validations)
         {
             _userRepository = userRepository;
             _logger = logger;

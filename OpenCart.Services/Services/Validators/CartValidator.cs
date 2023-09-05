@@ -1,9 +1,10 @@
 ﻿using FluentValidation;
+using OpenCart.Models.DTOs;
 using OpenCart.Models.Entities;
 
 namespace OpenCart.Services.Services.Validators
 {
-    public class CartValidator : AbstractValidator<CartItem>
+    public class CartValidator : AbstractValidator<CartItemDto>
     {
         public CartValidator()
         {
