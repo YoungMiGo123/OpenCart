@@ -1,7 +1,19 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.EntityFrameworkCore;
+using OpenCart.Infrastructure.Context;
+using OpenCart.Models.DTOs;
+using OpenCart.Models.Entities;
+using OpenCart.Operations.Mapping;
+using OpenCart.Repositories.Repositories.CartItemImageRepository;
+using OpenCart.Repositories.Repositories.CartItemRepository;
+using OpenCart.Repositories.Repositories.UserRepository;
+using OpenCart.Services.Services.CartService;
 using OpenCart.Services.Services.SettingsService;
+using OpenCart.Services.Services.UserService;
+using OpenCart.Services.Services.Validators;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
@@ -56,6 +68,21 @@ namespace OpenCart.Api.Configuration
                     };
                 });
         }
-
+        public static void ConfigureServices(this IServiceCollection services, IOpenCartServiceSettings openCartServiceSettings)
+        {
+            services.AddAutoMapper(typeof(CartItemMapping));
+            services.AddScoped<IValidator<CartItemImageDto>, CartImageValidator>();
+            services.AddScoped<IValidator<CartItemDto>, CartValidator>();
+            services.AddScoped<IValidator<ApplicationUser>, UserValidator>();
+            services.AddScoped<ICartItemImageRepository, CartItemImageRepository>();
+            services.AddScoped<ICartItemRepository, CartItemRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICartService, CartService>();
+        }
+        public static void ConfigureDatabase(this IServiceCollection services, IOpenCartServiceSettings openCartServiceSettings)
+        {
+            services.AddDbContext<OpenCartDbContext>(options => options.UseSqlServer(openCartServiceSettings.ConnectionString));
+        }
     }
 }

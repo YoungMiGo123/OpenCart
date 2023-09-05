@@ -16,6 +16,7 @@ namespace OpenCart.Api.Controllers
         }
         [HttpGet]
         [Route("SecureLoginUsingGitHub")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult SecureLoginUsingGitHub()
         {
             try
@@ -39,6 +40,7 @@ namespace OpenCart.Api.Controllers
 
         [HttpGet]
         [Route("SecureGithubCallbackResponse")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult SecureGithubCallbackResponse()
         {
             return Ok("Success");
