@@ -6,13 +6,13 @@
         {
             Errors = new List<string>();
         }
-        public ServiceResult(T response)
+        public ServiceResult(T response) : this()
         {
             Response = response;
         }
         public ServiceResult(string error) 
         {
-            Errors = new List<string>() { error};
+            Errors = new List<string>() { error };
         }
         public T Response { get; set; }
 

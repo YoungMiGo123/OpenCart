@@ -1,4 +1,5 @@
-﻿using OpenCart.Models.Entities;
+﻿using OpenCart.Models.DTOs;
+using OpenCart.Models.Entities;
 
 namespace OpenCart.Operations.Commands
 {
@@ -6,6 +7,6 @@ namespace OpenCart.Operations.Commands
     {
         public string UserId { get; set; }
         public Guid CartItemId { get; set; }
-        public CartItemImage CartItemImage { get; set; }
+        public CartItemImageDto CartItemImage { get; set; }
     }
 }

@@ -1,10 +1,11 @@
-﻿using OpenCart.Models.Entities;
+﻿using OpenCart.Models.DTOs;
+using OpenCart.Models.Entities;
 
 namespace OpenCart.Operations.Commands
 {
     public class AddCartItemCommand
     {
         public string UserId { get; set; }
-        public CartItem CartItem { get; set; }
+        public CartItemDto CartItem { get; set; }
     }
 }
