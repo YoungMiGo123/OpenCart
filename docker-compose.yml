@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  OpenCartapi:
+    build:
+      context: .
+      dockerfile: ./OpenCart.Api/Dockerfile
+    ports:
+      - "8000:80"
+    depends_on:
+      - sqlserver
+      - seq
+    environment:
+      OpenCartSettings__ConnectionString: "Server=sqlserver;Database=OpenCart;User Id=YOURUSERNAME;Password=YOURSECUREPASSWORD;"
+      OpenCartSettings__SeqUrl: "http://seq:5341"
+      OpenCartSettings__SecureOAuthSettings__ClientId: "<YourGithubClientID>"
+      OpenCartSettings__SecureOAuthSettings__ClientSecret: "<YourGithubClientSecret>"
+      OpenCartSettings__SecureOAuthSettings__RedirectUrl: "http://OpenCartapi:80/swagger"
+
+  sqlserver:
+    image: "mcr.microsoft.com/mssql/server"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "<YourSqlServerPassword>"
+    ports:
+      - "1433:1433"
+
+  seq:
+    image: "datalust/seq:latest"
+    environment:
+      ACCEPT_EULA: "Y"
+    ports:
+      - "5341:5341"

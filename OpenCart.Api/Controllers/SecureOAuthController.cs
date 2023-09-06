@@ -22,7 +22,8 @@ namespace OpenCart.Api.Controllers
             try
             {
                 var fallbackUrl = "https://localhost:7142/swagger";
-                var redirectUrl = string.IsNullOrWhiteSpace(_openCartSettings.SecureOAuthSettings.RedirectUrl) ?
+                var redirectUrl = string.IsNullOrWhiteSpace(_openCartSettings.SecureOAuthSettings.RedirectUrl) && 
+                    !_openCartSettings.SecureOAuthSettings.RedirectUrl.StartsWith("http") ?
                      fallbackUrl : 
                     _openCartSettings.SecureOAuthSettings.RedirectUrl;
 
